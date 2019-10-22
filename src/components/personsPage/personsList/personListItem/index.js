@@ -1,12 +1,13 @@
 import React from 'react'
 import TasksPage from "../../../tasksPage";
+import './personListItem.css'
 
-const PersonListItem = ({name, data, onDeleted}) => {
+const PersonListItem = ({id, name, todolist, onDeleted}) => {
   return(
-      <div className="card" style={{width: 'auto'}}>
+      <div className="card cardSize">
         <h3 className="card-title">{name}</h3>
             <div className="card-body">
-                <TasksPage data={data}/>
+                <TasksPage id={id} todolist={todolist}/>
             </div>
         <button className="btn btn-danger" onClick={onDeleted}>Delete</button>
       </div>

@@ -1,51 +1,51 @@
 import React, {Component} from 'react'
 import PersonsList from "./personsList";
 import AddPerson from "./addPerson";
+import {connect} from "react-redux";
+import {addPerson, deletePerson, getPersons} from "../../actions";
 
 class PersonPage extends Component {
     state = {
         persons: []
     };
-    id = 0;
+    id = 2;
+
+    componentDidMount() {
+        this.props.getPersons();
+    }
 
     createPerson(name) {
         return{
             id: this.id++,
             name,
-            data: []
+            todolist: []
         }
     }
 
     addNewPerson = (name) => {
         const newItem = this.createPerson(name);
-        this.setState(({persons}) => {
-            const newArray = [...persons, newItem];
-            return {
-                persons: newArray
-            }
-        })
+        this.props.addPerson(newItem);
     };
 
     onDeleted = (id) => {
-        this.setState(({persons}) => {
-            const index = persons.findIndex((el) => el.id === id);
-            const newArray = [...persons.slice(0, index),
-                ...persons.slice(index + 1)];
-            return{
-                persons: newArray
-            };
-        })
+        this.props.deletePerson(id);
     };
 
     render() {
         return(
           <>
               <AddPerson addNewPerson={this.addNewPerson}/>
-              <PersonsList persons={this.state.persons}
+              <PersonsList persons={this.props.state}
                            onDeleted={this.onDeleted}/>
           </>
         );
     }
 }
 
-export default PersonPage;
+export default connect(state => ({state: state.persons}),
+    dispatch => ({
+        getPersons: () => dispatch(getPersons()),
+        addPerson: (item) => dispatch(addPerson(item)),
+        deletePerson: (id) => dispatch(deletePerson(id)),
+    })
+    )(PersonPage);

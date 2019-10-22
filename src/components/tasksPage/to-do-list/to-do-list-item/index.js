@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import './to-do-list-item.css'
 
 export default class ToDoListItem extends Component {
     state = {
@@ -7,18 +8,27 @@ export default class ToDoListItem extends Component {
     };
 
     render() {
-        const {label, text, isDone, isImportant, isDoneHandler, isImportantHandler, onDeleted} = this.props;
+        const {label, text, startData, finalData, isDone, isImportant, onDelete, isDoneHandler, isImportantHandler} = this.props;
+        let style = '';
+        if(isDone){
+            style += ' isDone'
+        }
+        if(isImportant){
+            style += ' isImportant'
+        }
         return(
           <>
-              <div className="card" style={{width: 8+'rem'}}>
+              <div className="card">
                   <div className="card-body">
-                      <h5 className="card-title">{label}</h5>
+                      <h5 className={"card-title"+style}>{label}</h5>
                       <p className="card-text">{text}</p>
+                      <h6>{'start:' + startData}</h6>
+                      <h6>{'deadline:' + finalData}</h6>
                 <button onClick={isDoneHandler}
                         className="btn btn-success">Done</button>
                 <button onClick={isImportantHandler}
                         className="btn btn-warning">Important</button>
-                <button onClick={onDeleted}
+                <button onClick={onDelete}
                         className="btn btn-danger">Delete</button>
                   </div>
               </div>

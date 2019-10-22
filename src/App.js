@@ -7,9 +7,9 @@ class App extends Component {
 
   render() {
     return (
-        <div>
-          <NavigationBar/>
-        </div>
+        <>
+            <NavigationBar />
+        </>
     );
   }
 }

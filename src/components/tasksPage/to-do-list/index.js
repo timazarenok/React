@@ -1,16 +1,18 @@
 import React from 'react'
 import ToDoListItem from "./to-do-list-item";
+import carousel from 'carousel'
 
-const ToDoList = ({data, isDoneHandler, isImportantHandler, onDeleted}) => {
+
+const ToDoList = ({todolist, isDoneHandler, isImportantHandler, onDelete}) => {
     return(
-        <ul className="list">
+            <ul className="list">
             {
-                data.map((el) => {
+                todolist.map((el) => {
                     return <li key={el.id} className="list-inline-item">
                         <ToDoListItem {...el}
-                        onDeleted={() => onDeleted(el.id)}
-                        isDoneHandler={() => isDoneHandler(el.id)}
-                        isImportantHandler={() => isImportantHandler(el.id)}/>
+                                      onDelete={() => onDelete(el.id)}
+                                      isDoneHandler={() => isDoneHandler(el.id)}
+                                      isImportantHandler={() => isImportantHandler(el.id)}/>
                     </li>
                 })
             }

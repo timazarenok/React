@@ -2,24 +2,11 @@ import React, {Component} from 'react';
 import ToDoList from "./to-do-list";
 import AddBoard from "./addBoard";
 import 'bootstrap/dist/css/bootstrap.css'
+import {connect} from "react-redux";
+import {addTodos, deleteTodos, setDone, setImportant} from "../../actions";
 
 class TasksPage extends Component {
-    id = 0;
-    state = {
-        data: this.props.data
-    };
-
-    toggleProperty(arr,id,propName) {
-        const idx = arr.findIndex((el) => el.id === id);
-        const oldItem = arr[idx];
-        const newItem = {...oldItem, [propName]: !oldItem[propName]};
-
-        return [
-            ...arr.slice(0, idx),
-            newItem,
-            ...arr.slice(idx + 1)
-        ]
-    }
+    id = 1;
 
     createToDoItem (label, text, startData, finalData) {
         return {
@@ -34,37 +21,20 @@ class TasksPage extends Component {
     }
 
     isDoneHandler = (id) => {
-        this.setState(({data}) => {
-            return this.toggleProperty(data, id, 'Done')
-        })
+        this.props.setDone(this.props.id, id);
     };
 
     isImportantHandler = (id) => {
-        this.setState(({data}) => {
-            return this.toggleProperty(data, id, 'Important')
-        })
+        this.props.setImportant(this.props.id, id);
     };
 
-    onDelete = (id) => {
-        this.setState(({data}) => {
-            const index = data.findIndex((el) => el.id === id);
-            const newArray = [...data.slice(0, index),
-                ...data.slice(index + 1)];
-            return{
-                data: newArray
-            };
-        })
+    onDelete = (idTodos) => {
+        this.props.deleteTodos(idTodos, this.props.id);
     };
 
     addItem = (label, text, startData, finalData) => {
         const newItem = this.createToDoItem(label,text,startData,finalData);
-        this.setState(({data}) => {
-            const newArray = [...data, newItem];
-            return{
-                data: newArray
-            }
-        });
-        console.log(this.state.data)
+        this.props.addTodos(this.props.id, newItem);
     };
 
     render() {
@@ -73,13 +43,20 @@ class TasksPage extends Component {
                 <span>Enter ur tasks</span>
                 <AddBoard addItem={this.addItem}/>
                 <span>ToDoList</span>
-                <ToDoList data={this.state.data}
+                <ToDoList todolist={this.props.todolist}
                           isDoneHandler={this.isDoneHandler}
                           isImportantHandler={this.isImportantHandler}
-                          onDeleted={this.onDelete}/>
+                          onDelete={this.onDelete}/>
             </div>
         );
     }
 }
 
-export default TasksPage;
+export default connect(state => ({state: state.persons}),
+    dispatch => ({
+        setImportant: (id, idTodos) => dispatch(setImportant(id, idTodos)),
+        setDone: (id, idTodos) => dispatch(setDone(id, idTodos)),
+        addTodos: (id, item) => dispatch(addTodos(id, item)),
+        deleteTodos: (idTodos, id) => dispatch(deleteTodos(idTodos, id))
+    })
+)(TasksPage);
